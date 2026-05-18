@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="https://static.vecteezy.com/system/resources/thumbnails/019/514/650/small_2x/letter-s-logo-design-for-business-and-company-identity-with-luxury-concept-free-vector.jpg" type="image/png">
+  <title>Facebook Login </title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .header h1 {
+      font-size: 48px;
+      color: #1877f2;
+      margin: 0;
+    }
+    .login-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      padding: 20px;
+    }
+    .login-box {
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 350px;
+    }
+    .login-box h2 {
+      margin-bottom: 15px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      border: 1px solid #dddfe2;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 10px 0;
+      background-color: #1877f2;
+      color: white;
+      
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 8px;
+      border-radius: 25px;
+      border: 1px solid #000000;
+      
+    }
+    button:hover {
+      background-color: #1b21d3;
+      transform: translateY(-2px);
+    }
+    .links {
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .links a {
+      color: #385898;
+      text-decoration: none;
+      margin: 0 4px;
+    }
+    footer {
+      background-color: #f0f2f5;
+      padding: 20px 0;
+      font-size: 12px;
+      color: #606770;
+    }
+    .footer-top, .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .footer-top a, .footer-bottom a {
+      margin: 0 8px;
+      color: #385898;
+      text-decoration: none;
+    }
+    .language {
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>facebook</h1>
+</div>
+
+<!-- Main login container -->
+<div class="login-container">
+  <div class="login-box">
+    <h2 id="loginTitle">Log in to Facebook</h2>
+    <form id="loginForm" onsubmit="return handleLogin()">
+      <input type="text" id="email" placeholder="Email address or phone number" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit" id="loginButton">Log In</button>
+    </form>
+    <div class="links">
+      <a href="/forgetpassword.html" id="forgotPasswordLink">Forgotten password?</a>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-top">
+    <a href="#" onclick="switchLanguage('en')">English (UK)</a>
+    <a href="#" onclick="switchLanguage('hi')">हिन्दी</a>
+    <a href="#" onclick="switchLanguage('ur'); return false;">اردو</a>
+    <a href="#" onclick="switchLanguage('bn'); return false;">বাংলা</a>
+    <a href="#" onclick="switchLanguage('ta'); return false;">தமிழ்</a>
+    <a href="#" onclick="switchLanguage('ml'); return false;">മലയാളം</a>
+    <a href="#" onclick="switchLanguage('kn'); return false;">ಕನ್ನಡ</a>
+    <a href="#" onclick="switchLanguage('te'); return false;">తెలుగు</a>
+    <a href="#" onclick="switchLanguage('pa'); return false;">ਪੰਜਾਬੀ</a>
+  </div>
+  <div class="footer-bottom" style="text-align: center; margin-top: 10px;">
+    <a href="https://facebook.com/signup" target="_blank">Sign Up</a> · 
+    <a href="https://facebook.com/login" target="_blank">Log In</a> · 
+    <a href="https://facebook.com/messenger" target="_blank">Messenger</a> · 
+    <a href="https://facebook.com/lite" target="_blank">Facebook Lite</a> · 
+    <a href="https://facebook.com/video" target="_blank">Video</a> · 
+    <a href="https://facebook.com/metapay" target="_blank">Meta Pay</a> · 
+    <a href="https://facebook.com/metastore" target="_blank">Meta Store</a> · 
+    <a href="https://facebook.com/metaquest" target="_blank">Meta Quest</a> · 
+    <a href="https://facebook.com/rayban" target="_blank">Ray-Ban Meta</a> · 
+    <a href="https://facebook.com/metaai" target="_blank">Meta AI</a> · 
+    <a href="https://facebook.com/instagram" target="_blank">Instagram</a>
+  </div>
+
+  <div id="footerHelp" style="text-align: center; margin-top: 10px;">
+    <a href="https://facebook.com/help" target="_blank">Help</a> · 
+    <a href="https://facebook.com/contact_uploads" target="_blank">Contact uploading and non-users</a>
+  </div>
+  <div style="text-align: center; margin-top: 10px;">
+    <p id="copyright">Meta © 2025</p>
+  </div>
+</footer>
+
+<script>
+  function handleLogin() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    alert(`Email/Phone: ${email}\nPassword: ${password}`);
+    return false;
+  }
+
+const translations = {
+  en: {
+    loginTitle: "Log in to Facebook",
+    emailPlaceholder: "Email address or phone number",
+    passwordPlaceholder: "Password",
+    loginButton: "Log In",
+    forgotPassword: "Forgotten password?",
+    footerLinks: "Sign Up · Log In · Messenger · Facebook Lite · Video · Meta Pay · Meta Store · Meta Quest · Ray-Ban Meta · Meta AI · Instagram",
+    footerHelp: "Help · Contact uploading and non-users",
+    copyright: "Meta © 2025"
+  },
+  hi: {
+    loginTitle: "Facebook में लॉग इन करें",
+    emailPlaceholder: "ईमेल या फोन नंबर",
+    passwordPlaceholder: "पासवर्ड",
+    loginButton: "लॉग इन करें",
+    forgotPassword: "पासवर्ड भूल गए?",
+    footerLinks: "साइन अप · लॉग इन · मैसेंजर · फेसबुक लाइट · वीडियो · मेटा पे · मेटा स्टोर · मेटा क्वेस्ट · रे-बैन मेटा · मेटा एआई · इंस्टाग्राम",
+    footerHelp: "सहायता · संपर्क अपलोडिंग और गैर-उपयोगकर्ता",
+    copyright: "मेटा © 2025"
+  },
+  ur: {
+    loginTitle: "فیس بک میں لاگ ان کریں",
+    emailPlaceholder: "ای میل یا فون نمبر",
+    passwordPlaceholder: "پاس ورڈ",
+    loginButton: "لاگ ان",
+    forgotPassword: "پاس ورڈ بھول گئے؟",
+    footerLinks: "سائن اپ · لاگ ان · میسنجر · فیس بک لائٹ · ویڈیو · میٹا پے · میٹا اسٹور · میٹا کویسٹ · رے بین میٹا · میٹا اے آئی · انسٹاگرام",
+    footerHelp: "مدد · رابطے اپ لوڈنگ اور غیر صارفین",
+    copyright: "میٹا © 2025"
+  },
+  bn: {
+    loginTitle: "Facebook-এ লগ ইন করুন",
+    emailPlaceholder: "ইমেইল ঠিকানা বা ফোন নম্বর",
+    passwordPlaceholder: "পাসওয়ার্ড",
+    loginButton: "লগ ইন",
+    forgotPassword: "পাসওয়ার্ড ভুলে গেছেন?",
+    footerLinks: "সাইন আপ · লগ ইন · মেসেঞ্জার · ফেসবুক লাইট · ভিডিও · মেটা পে · মেটা স্টোর · মেটা কোয়েস্ট · রে-ব্যান মেটা · মেটা এআই · ইনস্টাগ্রাম",
+    footerHelp: "সহায়তা · যোগাযোগ আপলোডিং এবং নন-ইউজার",
+    copyright: "মেটা © 2025"
+  },
+  ta: {
+    loginTitle: "Facebook-இல் உள்நுழைக",
+    emailPlaceholder: "மின்னஞ்சல் முகவரி அல்லது தொலைபேசி எண்",
+    passwordPlaceholder: "கடவுச்சொல்",
+    loginButton: "உள்நுழை",
+    forgotPassword: "கடவுச்சொல்லை மறந்துவிட்டீர்களா?",
+    footerLinks: "பதிவு செய்க · உள்நுழை · மெசஞ்சர் · Facebook லைட் · வீடியோ · மேட்டா பே · மேட்டா ஸ்டோர் · மேட்டா குயஸ்ட் · ரே-பான் மேட்டா · மேட்டா AI · இன்ஸ்டாகிராம்",
+    footerHelp: "உதவி · தொடர்பு பதிவேற்றம் மற்றும் பயனர்களல்லாதோர்",
+    copyright: "மெட்டா © 2025"
+  },
+  ml: {
+    loginTitle: "Facebook-ൽ ലോഗിൻ ചെയ്യുക",
+    emailPlaceholder: "ഇമെയിൽ വിലാസം അല്ലെങ്കിൽ ഫോൺ നമ്പർ",
+    passwordPlaceholder: "പാസ്‌വേഡ്",
+    loginButton: "ലോഗിൻ",
+    forgotPassword: "പാസ്‌വേഡ് മറന്നോ?",
+    footerLinks: "സൈൻ അപ് · ലോഗിൻ · മെസഞ്ചർ · Facebook ലൈറ്റ് · വീഡിയോ · മെറ്റാ പേ · മെറ്റാ സ്റ്റോർ · മെറ്റാ ക്വസ്റ്റ് · റേ-ബാൻ മെറ്റാ · മെറ്റാ AI · ഇൻസ്റ്റഗ്രാം",
+    footerHelp: "സഹായം · അപ്‌ലോഡ് ചെയ്യുന്നതും ഉപയോക്താക്കളല്ലാത്തവരും",
+    copyright: "മെറ്റാ © 2025"
+  },
+  kn: {
+    loginTitle: "Facebook‌ಗೆ ಲಾಗಿನ್ ಆಗಿ",
+    emailPlaceholder: "ಇಮೇಲ್ ವಿಳಾಸ ಅಥವಾ ಫೋನ್ ಸಂಖ್ಯೆ",
+    passwordPlaceholder: "ಪಾಸ್ವರ್ಡ್",
+    loginButton: "ಲಾಗಿನ್",
+    forgotPassword: "ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರುವಿರಾ?",
+    footerLinks: "ಸೈನ್ ಅಪ್ · ಲಾಗಿನ್ · ಮೆಸೆಂಜರ್ · Facebook ಲೈಟ್ · ವಿಡಿಯೋ · ಮೆಟಾ ಪೇ · ಮೆಟಾ ಸ್ಟೋರ್ · ಮೆಟಾ ಕ್ವೆಸ್ಟ್ · ರೇ-ಬಾನ್ ಮೆಟಾ · ಮೆಟಾ AI · ಇನ್ಸ್ಟಾಗ್ರಾಂ",
+    footerHelp: "ಸಹಾಯ · ಸಂಪರ್ಕ ಅಪ್‌ಲೋಡ್ ಮತ್ತು ಬಳಕೆದಾರರಲ್ಲದವರು",
+    copyright: "ಮೆಟಾ © 2025"
+  },
+  te: {
+    loginTitle: "Facebook లో లాగిన్ అవ్వండి",
+    emailPlaceholder: "ఇమెయిల్ చిరునామా లేదా ఫోన్ నెంబర్",
+    passwordPlaceholder: "పాస్‌వర్డ్",
+    loginButton: "లాగిన్",
+    forgotPassword: "పాస్‌వర్డ్ మర్చిపోయారా?",
+    footerLinks: "సైన్ అప్ · లాగిన్ · మెసెంజర్ · Facebook లైట్ · వీడియో · మెటా పే · మెటా స్టోర్ · మెటా క్వెస్ట్ · రే-బాన్ మెటా · మెటా AI · ఇన్‌స్టాగ్రామ్",
+    footerHelp: "సహాయం · అప్లోడ్ చేసిన కాంటాక్ట్‌లు మరియు నాన్-యూజర్లు",
+    copyright: "మెటా © 2025"
+  },
+  pa: {
+    loginTitle: "Facebook ਵਿੱਚ ਲੌਗ ਇਨ ਕਰੋ",
+    emailPlaceholder: "ਈਮੇਲ ਪਤਾ ਜਾਂ ਫੋਨ ਨੰਬਰ",
+    passwordPlaceholder: "ਪਾਸਵਰਡ",
+    loginButton: "ਲੌਗ ਇਨ",
+    forgotPassword: "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ ਹੋ?",
+    footerLinks: "ਸਾਈਨ ਅੱਪ · ਲੌਗ ਇਨ · ਮੈਸेंਜਰ · Facebook ਲਾਈਟ · ਵੀਡੀਓ · ਮੈਟਾ ਪੇ · ਮੈਟਾ ਸਟੋਰ · ਮੈਟਾ ਕਵੇਸਟ · ਰੇ-ਬੈਨ ਮੈਟਾ · ਮੈਟਾ AI · ਇੰਸਟਾਗ੍ਰਾਮ",
+    footerHelp: "ਮਦਦ · ਸੰਪਰਕ ਅੱਪਲੋਡਿੰਗ ਅਤੇ ਗੈਰ-ਵਰਤੋਂਕਾਰ",
+    copyright: "ਮੈਟਾ © 2025"
+  }
+};
+
+
+  function switchLanguage(lang) {
+    const t = translations[lang];
+    if (!t) return;
+
+    document.getElementById("loginTitle").textContent = t.loginTitle;
+    document.getElementById("email").placeholder = t.emailPlaceholder;
+    document.getElementById("password").placeholder = t.passwordPlaceholder;
+    document.getElementById("loginButton").textContent = t.loginButton;
+    document.getElementById("forgotPasswordLink").textContent = t.forgotPassword;
+    document.getElementById("footerLinks").innerHTML = t.footerLinks.split("·").map(link => `<a href="#">${link.trim()}</a>`).join(" · ");
+    document.getElementById("footerHelp").innerHTML = t.footerHelp.split("·").map(link => `<a href="#">${link.trim()}</a>`).join(" · ");
+    document.getElementById("copyright").textContent = t.copyright;
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in — Google</title>
+  <link rel="icon"
+    href="https://static.vecteezy.com/system/resources/thumbnails/019/514/650/small_2x/letter-s-logo-design-for-business-and-company-identity-with-luxury-concept-free-vector.jpg"
+    type="image/png">
+  <style>
+    :root {
+      --color-primary: #1a73e8;
+      --color-primary-hover: #1669c1;
+      --color-error: #f44336;
+      --color-text-primary: #202124;
+      --color-text-secondary: #5f6368;
+      --spacing-small: 8px;
+      --spacing-medium: 16px;
+      --spacing-large: 32px;
+    }
+
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: var(--color-text-primary);
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-medium);
+    }
+
+    /* Container styling */
+    .container {
+      background-color: #fff;
+      border-radius: 20px;
+      max-width: 520px;
+      width: 100%;
+      padding: 40px 32px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    /* Transition for steps */
+    .step {
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    /* Hidden step: height 0, opacity 0 */
+    .hidden {
+      max-height: 0;
+      opacity: 0;
+      padding: 0;
+      pointer-events: none;
+    }
+    /* Visible step: auto height, opacity 1 */
+    .visible {
+      max-height: 1000px;
+      opacity: 1;
+      padding: var(--spacing-small) 0;
+      pointer-events: auto;
+    }
+
+    /* Logo styling */
+    .logo {
+      margin-bottom: var(--spacing-large);
+      display: flex;
+      justify-content: center;
+    }
+    .logo svg {
+      width: 50px;
+      height: 50px;
+      transition: transform 0.3s ease;
+    }
+    .logo svg:hover {
+      transform: rotate(15deg);
+    }
+
+    /* Heading styles */
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: var(--spacing-small);
+      text-align: center;
+      color: var(--color-text-primary);
+    }
+
+    /* Subtext styles */
+    .subtext {
+      font-size: 1rem;
+      margin-bottom: var(--spacing-large);
+      text-align: center;
+      color: var(--color-text-secondary);
+    }
+
+    /* Input group styles */
+    .input-group {
+      margin-bottom: var(--spacing-medium);
+      position: relative;
+    }
+
+    /* Input fields */
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 14px 44px 14px 16px;
+      font-size: 1rem;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      background-color: #fff;
+      color: var(--color-text-primary);
+      transition: all 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus-visible {
+      outline: 3px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba(26, 115, 233, 0.3);
+    }
+    input[aria-invalid="true"] {
+      border-color: var(--color-error);
+      box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.3);
+    }
+
+    /* Error message */
+    .error-message {
+      color: var(--color-error);
+      font-size: 0.8rem;
+      margin-top: 4px;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      padding-left: 24px;
+      background: url('data:image/svg+xml;utf8,<svg fill="red" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path d="M11.001 10h2v5h-2zm0-4h2v2h-2z"/><path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10 5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-4.41 3.59-8 8-8 4.41 0 8 3.59 8 8 0 4.41-3.59 8-8 8z"/></svg>') no-repeat left center;
+      background-size: 16px 16px;
+    }
+    .error-visible {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Shake animation for errors */
+    .input-error-shake {
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+
+    /* Back button styling */
+    .back {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: var(--spacing-medium);
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      justify-content: center;
+      transition: background 0.2s;
+      border: none;
+      background: transparent;
+      color: var(--color-text-secondary);
+      font-size: 0;
+    }
+    .back:hover,
+    .back:focus-visible {
+      background-color: #f1f3f4;
+      outline: none;
+    }
+    .back svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    .password-group {
+      position: relative;
+    }
+
+    .password-group input {
+      padding-right: 36px; /* Make space for the tick */
+    }
+
+    /* Links styles */
+    .link {
+      color: var(--color-primary);
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .link:hover,
+    .link:focus-visible {
+      text-decoration: underline;
+      color: var(--color-primary-hover);
+      outline: none;
+    }
+
+    /* Info text */
+    .info-text {
+      margin-top: var(--spacing-small);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--color-text-secondary);
+    }
+
+    /* Actions buttons */
+    .actions {
+      margin-top: var(--spacing-large);
+      display: flex;
+      justify-content: flex-end; /* align buttons right */
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--spacing-small);
+    }
+    .btn-primary {
+      background-color: var(--color-primary);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 20px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease, transform 0.2s ease;
+      user-select: none;
+    }
+    .btn-primary:disabled {
+      background-color: #a0c0e8;
+      cursor: not-allowed;
+    }
+    .btn-primary:hover:enabled,
+    .btn-primary:focus-visible {
+      background-color: var(--color-primary-hover);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      outline: none;
+    }
+
+    /* Password step style */
+    #step2 {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+    }
+    #step2.visible {
+      max-height: 500px;
+      opacity: 1;
+      padding: var(--spacing-medium) 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        max-width: 100%;
+        border-radius: 12px;
+        padding: 32px 24px;
+      }
+      .btn-primary {
+        width: 100%;
+      }
+      .actions {
+        justify-content: center;
+      }
+    }
+
+    /* Password strength indicator */
+    .strength-meter {
+      margin-top: 4px;
+      height: 6px;
+      border-radius: 4px;
+      background-color: #eee;
+      overflow: hidden;
+    }
+    .strength-meter-fill {
+      height: 100%;
+      width: 0;
+      background-color: var(--color-error);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    .strength-weak {
+      background-color: var(--color-error);
+    }
+    .strength-medium {
+      background-color: orange;
+    }
+    .strength-strong {
+      background-color: #4caf50;
+    }
+
+    /* Loading spinner (hidden by default) */
+    .loading-spinner {
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid var(--color-primary);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    .btn-loading .loading-spinner {
+      display: inline-block;
+    }
+    .btn-loading:disabled {
+      cursor: wait;
+      opacity: 0.8;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main" aria-label="Google Sign In Form">
+     <div class="logo" aria-hidden="true">
+    <!-- Logo SVG -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 533.5 544.3">
+      <path fill="#4285f4" d="M533.5 278.4c0-17.4-1.6-34.1-4.6-50.2H272v95h147.4c-6.3 33.9-25.1 62.5-53.5 81.6l86.5 67.2c50.6-46.7 81.1-115.6 81.1-193.6z"/>
+      <path fill="#34a853" d="M272 544.3c72.6 0 133.5-24.1 178-65.6l-86.5-67.2c-24 16.1-54.6 25.7-91.5 25.7-70.4 0-130.2-47.6-151.6-111.5H30.5v69.9C74.6 483.7 166.7 544.3 272 544.3z"/>
+      <path fill="#fbbc04" d="M120.4 325.7c-10.6-31.4-10.6-65.1 0-96.5V159.3H30.5c-35.4 70.8-35.4 154.9 0 225.7l89.9-69.3z"/>
+      <path fill="#ea4335" d="M272 107.7c39.4-.6 77.3 13.9 106.2 40.7l79.1-79.1C412.8 24.2 343.5-1.1 272 0 166.7 0 74.6 60.6 30.5 159.3l89.9 69.9C141.8 155.3 201.6 107.7 272 107.7z"/>
+    </svg>
+  </div>
+    <h2>Sign in</h2>
+    <form id="signin-form" novalidate>
+      <div class="step visible" id="step1">
+        <p class="subtext">Continue to Google</p>
+        <div class="input-group">
+          <label for="emailPhone">Email or phone</label>
+          <input
+            type="text"
+            id="emailPhone"
+            name="emailPhone"
+            autocomplete="username"
+            aria-describedby="emailPhone-error"
+            aria-invalid="false"
+            required
+            placeholder="Enter your email or phone"
+          />
+          <div id="emailPhone-error" class="error-message" aria-live="polite"></div>
+        </div>
+         <div style="margin-bottom: 16px;">
+        <a href="forgetemail.html" class="link" id="forgot-email">Forgot email?</a>
+      </div>
+
+      <div class="info-text">
+        Not your computer? Use Guest mode to sign in privately.
+        <a href="#" class="link">Learn more</a>
+      </div>
+      </div>
+
+      <div class="step hidden" id="step2" aria-hidden="true">
+        <button type="button" class="back" id="backBtn" aria-label="Go back to email input" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <p class="subtext">Enter your password</p>
+        <div class="input-group password-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="current-password"
+            aria-describedby="password-error"
+            aria-invalid="false"
+            required
+            placeholder="Enter your password"
+          />
+          <div id="password-error" class="error-message" aria-live="polite"></div>
+          <div class="strength-meter" aria-hidden="true">
+            <div class="strength-meter-fill" id="password-strength"></div>
+          </div>
+        </div>
+        <p class="info-text">
+          <a href="forgetpassword.html" class="link" tabindex="0">Forgot password?</a>
+        </p>
+      </div>
+      
+      <div class="actions">
+        <button type="submit" class="btn-primary" id="nextBtn" disabled>Next</button>
+      </div>
+    </form>
+    <div class="footer" style="margin-top:20px; display:flex; gap:10px; justify-content:center; font-size:0.9rem;">
+      <a href="https://support.google.com/accounts">Help</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const emailPhoneInput = document.getElementById('emailPhone');
+      const emailPhoneError = document.getElementById('emailPhone-error');
+      const passwordInput = document.getElementById('password');
+      const passwordError = document.getElementById('password-error');
+      const nextBtn = document.getElementById('nextBtn');
+      const backBtn = document.getElementById('backBtn');
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const passwordStrengthFill = document.getElementById('password-strength');
+      const form = document.getElementById('signin-form');
+
+      let currentStep = 1;
+      let emailPhoneValid = false;
+      let passwordValid = false;
+
+      // Debounce helper
+      function debounce(fn, delay) {
+        let timeoutId;
+        return (...args) => {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => fn(...args), delay);
+        };
+      }
+
+      // Validation for email or phone
+      function validateEmailPhone() {
+        const val = emailPhoneInput.value.trim();
+        if (!val) {
+          setError(emailPhoneInput, emailPhoneError, 'Enter an email or phone number');
+          emailPhoneValid = false;
+          return;
+        }
+
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+        const isPhone = /^[6-9]\d{9}$/.test(val);
+
+        if (!isEmail && !isPhone) {
+          setError(emailPhoneInput, emailPhoneError, 'Enter a valid email or 10-digit phone number');
+          emailPhoneValid = false;
+          return;
+        }
+
+        clearError(emailPhoneInput, emailPhoneError);
+        emailPhoneValid = true;
+      }
+
+      // Password validation
+      function validatePassword() {
+        const val = passwordInput.value;
+        if (!val) {
+          setError(passwordInput, passwordError, 'Enter your password');
+          passwordValid = false;
+          updatePasswordStrength(0);
+          return;
+        }
+
+        // Password rules
+        const lengthOk = val.length >= 8;
+        const upperOk = /[A-Z]/.test(val);
+        const lowerOk = /[a-z]/.test(val);
+        const digitOk = /\d/.test(val);
+        const specialOk = /[^A-Za-z0-9]/.test(val);
+
+        if (!lengthOk) {
+          setError(passwordInput, passwordError, 'Password must be at least 8 characters');
+          passwordValid = false;
+          updatePasswordStrength(1);
+          return;
+        }
+        if (!upperOk) {
+          setError(passwordInput, passwordError, 'Password must include an uppercase letter');
+          passwordValid = false;
+          updatePasswordStrength(2);
+          return;
+        }
+        if (!lowerOk) {
+          setError(passwordInput, passwordError, 'Password must include a lowercase letter');
+          passwordValid = false;
+          updatePasswordStrength(3);
+          return;
+        }
+        if (!digitOk) {
+          setError(passwordInput, passwordError, 'Password must include a number');
+          passwordValid = false;
+          updatePasswordStrength(4);
+          return;
+        }
+        if (!specialOk) {
+          setError(passwordInput, passwordError, 'Password must include a special character');
+          passwordValid = false;
+          updatePasswordStrength(5);
+          return;
+        }
+
+        clearError(passwordInput, passwordError);
+        passwordValid = true;
+        updatePasswordStrength(6);
+      }
+
+      // Show error helper
+      function setError(input, errorElement, message) {
+        input.setAttribute('aria-invalid', 'true');
+        errorElement.textContent        = message;
+        errorElement.classList.add('error-visible');
+        input.classList.add('input-error-shake');
+        setTimeout(() => {
+          input.classList.remove('input-error-shake');
+        }, 300);
+        updateNextButtonState();
+      }
+
+      // Clear error helper
+      function clearError(input, errorElement) {
+        input.setAttribute('aria-invalid', 'false');
+        errorElement.textContent = '';
+        errorElement.classList.remove('error-visible');
+        input.classList.remove('input-error-shake');
+        updateNextButtonState();
+      }
+
+      // Update "Next" button enable state
+      function updateNextButtonState() {
+        if (currentStep === 1) {
+          nextBtn.disabled = !emailPhoneValid;
+        } else {
+          nextBtn.disabled = !passwordValid;
+        }
+      }
+
+      // Password strength meter update
+      function updatePasswordStrength(level) {
+        const levels = [
+          0, 20, 40, 60, 80, 90, 100
+        ];
+        const width = levels[level] + '%';
+        const fill = passwordStrengthFill;
+        fill.style.width = width;
+
+        fill.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+        if (level <= 2) {
+          fill.classList.add('strength-weak');
+        } else if (level <= 4) {
+          fill.classList.add('strength-medium');
+        } else {
+          fill.classList.add('strength-strong');
+        }
+      }
+
+      // Debounced handlers
+      const debouncedEmailPhoneValidation = debounce(validateEmailPhone, 300);
+      const debouncedPasswordValidation = debounce(validatePassword, 300);
+
+      // Event listeners
+      emailPhoneInput.addEventListener('input', debouncedEmailPhoneValidation);
+      passwordInput.addEventListener('input', debouncedPasswordValidation);
+
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (currentStep === 1) {
+          validateEmailPhone();
+          if (!emailPhoneValid) return;
+
+          // Show step 2 (password)
+          step1.classList.replace('visible', 'hidden');
+          step2.classList.replace('hidden', 'visible');
+          step2.setAttribute('aria-hidden', 'false');
+          currentStep = 2;
+          updateNextButtonState();
+          backBtn.hidden = false;
+          passwordInput.focus();
+        } else {
+          validatePassword();
+          if (!passwordValid) return;
+
+          // Simulate loading (e.g., sending form)
+          nextBtn.disabled = true;
+          nextBtn.classList.add('btn-loading');
+          nextBtn.innerHTML = 'Signing in... <span class="loading-spinner"></span>';
+
+          // Fake submission delay
+          setTimeout(() => {
+            alert('Signed in successfully!');
+            form.reset();
+            window.location.reload(); // or redirect
+          }, 1500);
+        }
+      });
+
+      backBtn.addEventListener('click', () => {
+        // Go back to step 1 (email/phone)
+        step2.classList.replace('visible', 'hidden');
+        step2.setAttribute('aria-hidden', 'true');
+        step1.classList.replace('hidden', 'visible');
+        currentStep = 1;
+        updateNextButtonState();
+        backBtn.hidden = true;
+        emailPhoneInput.focus();
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (currentStep === 1) {
+          validateEmailPhone();
+        } else {
+          validatePassword();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+

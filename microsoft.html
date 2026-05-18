@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon"
+    href="https://static.vecteezy.com/system/resources/thumbnails/019/514/650/small_2x/letter-s-logo-design-for-business-and-company-identity-with-luxury-concept-free-vector.jpg"
+    type="image/png">
+  <title>Microsoft Sign-in Modal - Multi-step</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: aliceblue;
+    }
+
+    #modalOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    #modal {
+      background: #fff;
+      max-width: 400px;
+      width: 100%;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Spinner overlay for loading indicator */
+    #spinnerOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      z-index: 1000;
+    }
+
+    /* Spinner animation */
+    .spinner {
+      border: 4px solid #ccc;
+      border-top: 4px solid #0078d4;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Logo styles with hover rotation */
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    /* .logo:hover {
+    animation: rotate360 1s linear forwards;
+  } */
+    @keyframes rotate360 {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .logo img {
+      width: 30px;
+      height: 30px;
+      margin-right: 8px;
+    }
+
+    .logo h2 {
+      margin: 0;
+      font-size: 1.2em;
+      color: #201f1e;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 1.5em;
+      color: #201f1e;
+    }
+
+    p {
+      font-size: 0.9em;
+      margin-bottom: 20px;
+      color: #201f1e;
+    }
+
+    /* Input container styles */
+    .input-container {
+      position: relative;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    /* Inputs */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 16px 12px 8px 12px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      color: #201f1e;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="email"]:focus {
+      border-color: #0078d4;
+    }
+
+    /* Floating label styles */
+    label.floating-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #fff;
+      padding: 0 4px;
+      color: #666;
+      font-size: 1em;
+      pointer-events: none;
+      transition: all 0.2s ease-out;
+    }
+
+    input:focus+label.floating-label,
+    input:not(:placeholder-shown)+label.floating-label {
+      top: -8px;
+      font-size: 0.75em;
+      color: #0078d4;
+    }
+
+    /* Error message styles */
+    #errorMsg,
+    #errorMsg2 {
+      color: red;
+      font-size: 0.8em;
+      margin-top: 8px;
+      height: 1em;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    #errorMsg.show,
+    #errorMsg2.show {
+      opacity: 1;
+    }
+
+    /* Button styles */
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #0078d4;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover:enabled {
+      background-color: #005a9e;
+      transform: scale(1.02);
+    }
+
+    button:active:enabled {
+      background-color: #004578;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Footer styles */
+    .footer {
+      margin-top: 30px;
+      font-size: 0.8em;
+      text-align: center;
+      width: 100%;
+    }
+
+    .footer a {
+      color: #0067b8;
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.3s;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer a:active {
+      color: #004578;
+    }
+
+    .footer-links {
+      margin-top: 20px;
+      font-size: 0.8em;
+      color: #201f1e;
+      text-align: center;
+      width: 100%;
+    }
+
+    .footer-links a {
+      color: #0067b8;
+      text-decoration: none;
+      margin: 0 6px;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-links a:active {
+      color: #004578;
+    }
+
+    @media(max-width: 500px) {
+      #modal {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="modalOverlay">
+    <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+      <!-- Logo -->
+      <div class="logo" tabindex="0" aria-label="Microsoft logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft logo" />
+        <h2><a href="https://www.microsoft.com" style="color: black; text-decoration: none;">Microsoft</a></h2>
+      </div>
+      <!-- Headers -->
+      <h1 id="modalTitle">Sign in</h1>
+      <p id="modalDesc">Use your Microsoft account.</p>
+
+      <!-- Step 1: Email/Phone -->
+      <div id="step1" aria-hidden="false" style="width: 100%;">
+        <div class="input-container">
+          <input type="email" id="email" placeholder=" " autocomplete="username" aria-describedby="errorMsg"
+            aria-required="true" />
+          <label class="floating-label" for="email">Email or phone number</label>
+        </div>
+        <div id="errorMsg" role="alert" aria-live="assertive"></div>
+      </div>
+
+      <!-- Step 2: Password (initially hidden) -->
+      <div id="step2" aria-hidden="true" style="display:none;width: 100%;">
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+          <div style="flex:1;">
+            <div class="input-container">
+              <input type="password" id="password" placeholder=" " autocomplete="current-password"
+                aria-describedby="errorMsg2" aria-required="true" />
+              <label class="floating-label" for="password">Password</label>
+            </div>
+          </div>
+        </div>
+        <!-- "Forgot password?" below password input -->
+        <div style="margin-top:10px; text-align:right;">
+          <a href="/forgetpassword.html" rel="noopener noreferrer" style="font-size:0.8em; text-decoration: none;">Forgot
+            password?</a>
+        </div>
+        <label style="margin-top:10px; display:flex; align-items:center;">
+          <input type="checkbox" id="keepSignedIn" />
+          <span style="margin-left:8px;">Keep me signed in</span>
+        </label>
+        <div id="errorMsg2" role="alert" aria-live="assertive"></div>
+      </div>
+
+      <!-- Buttons -->
+      <div style="margin-top:20px; width:100%; display:flex; justify-content: space-between;">
+        <button id="backBtn" style="display:none;">Back</button>
+        <button id="nextBtn" type="button">Next</button>
+      </div>
+
+      <!-- Footer links -->
+      <div class="footer">
+        <a href="https://signup.live.com" rel="noopener noreferrer" tabindex="0">Create an account</a>
+      </div>
+      <div class="footer-links">
+        <a href="https://support.microsoft.com/en-us" rel="noopener noreferrer" tabindex="0">Help and feedback</a>
+        <a href="https://www.microsoft.com/en-us/legal/intellectualproperty/copyright" rel="noopener noreferrer"
+          tabindex="0">Terms of use</a>
+        <a href="https://privacy.microsoft.com/en-us/privacystatement" rel="noopener noreferrer" tabindex="0">Privacy
+          and cookies</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading spinner overlay -->
+  <div id="spinnerOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    const errorMsg1 = document.getElementById('errorMsg');
+    const errorMsg2 = document.getElementById('errorMsg2');
+
+    const step1Div = document.getElementById('step1');
+    const step2Div = document.getElementById('step2');
+
+    const spinnerOverlay = document.getElementById('spinnerOverlay');
+
+    let debounceTimeout = null;
+
+    function validateEmailOrPhone(input) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const mobilePattern = /^(\+91|0)?[6-9]\d{9}$/;
+      return emailPattern.test(input) || mobilePattern.test(input);
+    }
+
+    function showError(msg, errorDiv) {
+      errorDiv.textContent = msg;
+      errorDiv.classList.add('show');
+      if (showError.timeout) clearTimeout(showError.timeout);
+      showError.timeout = setTimeout(() => {
+        errorDiv.classList.remove('show');
+        errorDiv.textContent = '';
+      }, 3000);
+    }
+
+    function showLoading(show) {
+      spinnerOverlay.style.display = show ? 'flex' : 'none';
+    }
+
+    function disableButton(disable) {
+      nextBtn.disabled = disable;
+    }
+
+    function goToPasswordStep(email) {
+      // Hide step 1, show step 2
+      step1Div.setAttribute('aria-hidden', 'true');
+      step2Div.setAttribute('aria-hidden', 'false');
+      step1Div.style.display = 'none';
+      step2Div.style.display = 'block';
+
+      backBtn.style.display = 'inline-block';
+
+      setTimeout(() => {
+        document.getElementById('password').focus();
+      }, 100);
+    }
+
+    function goBackToEmail() {
+      // Show step 1, hide step 2
+      step1Div.setAttribute('aria-hidden', 'false');
+      step2Div.setAttribute('aria-hidden', 'true');
+      step1Div.style.display = 'block';
+      step2Div.style.display = 'none';
+
+      backBtn.style.display = 'none';
+
+      setTimeout(() => {
+        emailInput.focus();
+      }, 100);
+    }
+
+    function handleNext() {
+      if (nextBtn.disabled) return;
+
+      if (step1Div.getAttribute('aria-hidden') === 'false') {
+        // Step 1: Email validation
+        const emailVal = emailInput.value.trim();
+        if (emailVal === '') {
+          showError('Invalid credentials', errorMsg1);
+          return;
+        }
+        if (validateEmailOrPhone(emailVal)) {
+          errorMsg1.classList.remove('show');
+          disableButton(true);
+          showLoading(true);
+          setTimeout(() => {
+            showLoading(false);
+            disableButton(false);
+            goToPasswordStep(emailVal);
+          }, 1500);
+        } else {
+          showError('Invalid credentials', errorMsg1);
+        }
+      } else {
+        // Step 2: Password entry
+        const passVal = passwordInput.value.trim();
+        if (passVal === '') {
+          showError('Invalid credentials', errorMsg2);
+          return;
+        }
+        disableButton(true);
+        showLoading(true);
+        setTimeout(() => {
+          showLoading(false);
+          disableButton(false);
+          alert('Submitted login for email: ' + emailInput.value.trim() + '\nKeep signed in: ' + document.getElementById('keepSignedIn').checked);
+          // Reset or close modal as needed
+        }, 1500);
+      }
+    }
+
+    // Debounce input validation
+    emailInput.addEventListener('input', () => {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        // Optional real-time validation or effects
+      }, 300);
+    });
+
+    passwordInput.addEventListener('input', () => {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(() => {
+        // Optional real-time validation
+      }, 300);
+    });
+
+    nextBtn.addEventListener('click', handleNext);
+    backBtn.addEventListener('click', goBackToEmail);
+
+    emailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleNext(); });
+    passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleNext(); });
+  </script>
+</body>
+
+</html>

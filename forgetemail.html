@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find Your Email</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      background:#f1f3f4;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      padding:20px;
+    }
+
+    .container{
+      width:100%;
+      max-width:430px;
+      background:#fff;
+      border-radius:20px;
+      padding:40px 32px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.1);
+      animation:fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(20px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .logo{
+      display:flex;
+      justify-content:center;
+      margin-bottom:25px;
+    }
+
+    .logo svg{
+      width:55px;
+      height:55px;
+    }
+
+    h2{
+      text-align:center;
+      font-weight:400;
+      margin-bottom:10px;
+      color:#202124;
+    }
+
+    .subtext{
+      text-align:center;
+      color:#5f6368;
+      margin-bottom:30px;
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    .input-group{
+      margin-bottom:18px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:8px;
+      color:#202124;
+      font-size:14px;
+    }
+
+    input{
+      width:100%;
+      padding:14px 16px;
+      border:1px solid #dadce0;
+      border-radius:6px;
+      font-size:15px;
+      transition:.2s;
+    }
+
+    input:focus{
+      outline:none;
+      border-color:#1a73e8;
+      box-shadow:0 0 0 3px rgba(26,115,232,0.15);
+    }
+
+    .captcha-box{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:15px;
+    }
+
+    canvas{
+      border:1px solid #ccc;
+      border-radius:8px;
+      width:240px;
+      height:60px;
+      /* Ensures canvas is responsive on very small screens */
+      max-width: 100%; 
+    }
+
+    .refresh-btn{
+      border:none;
+      background:#1a73e8;
+      color:white;
+      width:50px;
+      height:50px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:22px;
+      flex-shrink:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .refresh-btn:hover{
+      background:#1669c1;
+    }
+
+    .otp-box{
+      display:none;
+      animation:fadeIn .4s ease;
+    }
+
+    /* Digital Timer Style */
+    .digital-timer{
+      text-align:center;
+      margin-top:10px;
+      font-size:14px;
+      color:#5f6368;
+      font-weight:bold;
+      display:none; /* Hidden initially */
+      background:#f8f9fa;
+      padding:8px;
+      border-radius:8px;
+      border: 1px solid #dadce0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Responsive Timer Text Size */
+    #timerText {
+      font-family: monospace;
+      font-size: 16px;
+    }
+
+    .error{
+      color:#d93025;
+      font-size:13px;
+      margin-bottom:15px;
+      display:none;
+    }
+
+    .actions{
+      margin-top:25px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+
+    .back-link{
+      text-decoration:none;
+      color:#1a73e8;
+      font-size:14px;
+    }
+
+    .back-link:hover{
+      text-decoration:underline;
+    }
+
+    .btn{
+      background:#1a73e8;
+      color:#fff;
+      border:none;
+      padding:12px 24px;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:15px;
+      min-width:120px;
+      transition:.2s;
+    }
+
+    .btn:hover{
+      background:#1669c1;
+    }
+
+    .btn:disabled{
+      background:#9bbff3;
+      cursor:not-allowed;
+    }
+
+    .message{
+      margin-top:18px;
+      background:#e8f0fe;
+      color:#174ea6;
+      padding:14px;
+      border-radius:10px;
+      display:none;
+      font-size:14px;
+      line-height:1.5;
+      text-align:center;
+    }
+
+    .spinner{
+      width:18px;
+      height:18px;
+      border:3px solid rgba(255,255,255,0.5);
+      border-top:3px solid white;
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+      display:none;
+      margin-left:10px;
+    }
+
+    @keyframes spin{
+      to{
+        transform:rotate(360deg);
+      }
+    }
+
+    /* Mobile Responsiveness */
+    @media(max-width:480px){
+
+      .container{
+        padding:30px 22px;
+      }
+
+      .actions{
+        flex-direction:column;
+      }
+
+      .btn{
+        width:100%;
+      }
+
+      .digital-timer {
+        font-size: 12px;
+        padding: 6px;
+      }
+      
+      #timerText {
+        font-size: 14px;
+      }
+      
+      /* Adjust captcha layout on tiny screens if needed */
+      .captcha-box {
+        justify-content: center;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 533.5 544.3">
+      <path fill="#4285f4" d="M533.5 278.4c0-17.4-1.6-34.1-4.6-50.2H272v95h147.4c-6.3 33.9-25.1 62.5-53.5 81.6l86.5 67.2c50.6-46.7 81.1-115.6 81.1-193.6z"/>
+      <path fill="#34a853" d="M272 544.3c72.6 0 133.5-24.1 178-65.6l-86.5-67.2c-24 16.1-54.6 25.7-91.5 25.7-70.4 0-130.2-47.6-151.6-111.5H30.5v69.9C74.6 483.7 166.7 544.3 272 544.3z"/>
+      <path fill="#fbbc04" d="M120.4 325.7c-10.6-31.4-10.6-65.1 0-96.5V159.3H30.5c-35.4 70.8-35.4 154.9 0 225.7l89.9-69.3z"/>
+      <path fill="#ea4335" d="M272 107.7c39.4-.6 77.3 13.9 106.2 40.7l79.1-79.1C412.8 24.2 343.5-1.1 272 0 166.7 0 74.6 60.6 30.5 159.3l89.9 69.9C141.8 155.3 201.6 107.7 272 107.7z"/>
+    </svg>
+
+  </div>
+
+  <h2>Find your email</h2>
+
+  <p class="subtext">
+    Enter your recovery phone number or email.
+  </p>
+
+  <form id="form">
+
+    <div class="input-group">
+      <label>Recovery phone or email</label>
+
+      <input
+        type="text"
+        id="identifier"
+        placeholder="Enter phone or email"
+      >
+    </div>
+
+    <div class="captcha-box">
+
+      <canvas id="captchaCanvas" width="240" height="60"></canvas>
+
+      <button
+        type="button"
+        class="refresh-btn"
+        onclick="generateCaptcha()"
+        aria-label="Refresh Captcha"
+      >
+        ↻
+      </button>
+
+    </div>
+
+    <div class="input-group">
+
+      <input
+        type="text"
+        id="captchaInput"
+        placeholder="Enter CAPTCHA"
+      >
+
+    </div>
+
+    <div class="otp-box" id="otpBox">
+
+      <div class="input-group">
+
+        <label>Enter OTP</label>
+
+        <input
+          type="text"
+          id="otpInput"
+          maxlength="6"
+          placeholder="6-digit OTP"
+        >
+
+      </div>
+
+      <!-- Digital Timer (MM:SS format) -->
+      <div class="digital-timer" id="digitalTimerBox">
+        Time remaining: <span id="timerText">00:20</span>
+      </div>
+
+    </div>
+
+    <div class="error" id="error"></div>
+
+    <div class="actions">
+
+      <a href="google1.html" class="back-link">
+        Back to Sign in
+      </a>
+
+      <button class="btn" id="submitBtn">
+
+        <span id="btnText">
+          Next
+        </span>
+
+        <span class="spinner" id="spinner"></span>
+
+      </button>
+    </div>
+
+    <div class="message" id="message"></div>
+
+  </form>
+
+</div>
+
+<script>
+
+  const form =
+    document.getElementById('form');
+
+  const identifier =
+    document.getElementById('identifier');
+
+  const captchaInput =
+    document.getElementById('captchaInput');
+
+  const otpInput =
+    document.getElementById('otpInput');
+
+  const error =
+    document.getElementById('error');
+
+  const message =
+    document.getElementById('message');
+
+  const submitBtn =
+    document.getElementById('submitBtn');
+
+  const btnText =
+    document.getElementById('btnText');
+
+  const spinner =
+    document.getElementById('spinner');
+
+  const otpBox =
+    document.getElementById('otpBox');
+
+  const digitalTimerBox =
+    document.getElementById('digitalTimerBox');
+
+  const timerText =
+    document.getElementById('timerText');
+
+  let generatedCaptcha = '';
+  let generatedOtp = '';
+  let otpSent = false;
+  let countdown;
+
+  // Random Human Names Generator
+  const firstNames = [
+  "Aarav", "Vivaan", "Aditya", "Vihaan", "Arjun",
+  "Rohan", "Karan", "Rahul", "Siddharth", "Yash",
+  "Kabir", "Aryan", "Ishaan", "Dev", "Krishna",
+  "Lakshay", "Harsh", "Nikhil", "Sahil", "Manav",
+
+  "Aanya", "Ananya", "Aarohi", "Diya", "Ira",
+  "Kiara", "Navya", "Pari", "Riya", "Saanvi",
+  "Suhana", "Meera", "Priya", "Sneha", "Kavya",
+  "Tanya", "Ishita", "Shreya", "Pooja", "Nisha"
+];
+const lastNames = [
+  "Sharma", "Verma", "Gupta", "Singh", "Kumar",
+  "Patel", "Shah", "Mehta", "Joshi", "Desai",
+  "Reddy", "Nair", "Iyer", "Yadav", "Chauhan",
+  "Kapoor", "Malhotra", "Bose", "Banerjee", "Chatterjee",
+  "Pillai", "Naidu", "Agarwal", "Jain", "Mishra",
+  "Pandey", "Thakur", "Shetty", "Roy", "Das"
+];
+  function validateEmail(email){
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      .test(email);
+
+  }
+
+  function validateMobile(mobile){
+
+    mobile = mobile.replace(/\s/g,'');
+
+    return /^[6-9]\d{9}$/.test(mobile);
+
+  }
+
+function generateCaptcha(){
+  const numbers = '0123456789';
+  const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const lowerCase = 'abcdefghijklmnopqrstuvwxyz';
+
+  let captchaArray = [
+    numbers[Math.floor(Math.random() * numbers.length)],
+    upperCase[Math.floor(Math.random() * upperCase.length)],
+    lowerCase[Math.floor(Math.random() * lowerCase.length)]
+  ];
+
+  const allChars = numbers + upperCase + lowerCase;
+
+  for (let i = 0; i < 3; i++) {
+    captchaArray.push(allChars[Math.floor(Math.random() * allChars.length)]);
+  }
+
+  captchaArray = captchaArray.sort(() => Math.random() - 0.5);
+  generatedCaptcha = captchaArray.join('');
+
+  const canvas = document.getElementById('captchaCanvas');
+  const ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background (slightly textured)
+  ctx.fillStyle = '#e9ecef';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Add faint noise dots (background grain)
+  for (let i = 0; i < 80; i++) {
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.beginPath();
+    ctx.arc(
+      Math.random() * canvas.width,
+      Math.random() * canvas.height,
+      Math.random() * 1.5,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
+
+  // Draw CAPTCHA characters (bold black + distortion)
+  for (let i = 0; i < 6; i++) {
+    const char = captchaArray[i];
+
+    ctx.save();
+
+    ctx.font = 'bold 32px Arial';
+    ctx.fillStyle = '#000'; // 👈 pure black bold text
+
+    const x = 25 + i * 32;
+    const y = 38 + Math.random() * 8;
+
+    ctx.translate(x, y);
+
+    // stronger rotation + slight scaling distortion
+    ctx.rotate((Math.random() - 0.5) * 0.7);
+    ctx.scale(1, 0.9 + Math.random() * 0.2);
+
+    ctx.fillText(char, 0, 0);
+    ctx.restore();
+  }
+
+  // Noise lines (thicker + more)
+  for (let i = 0; i < 10; i++) {
+    ctx.beginPath();
+    ctx.moveTo(
+      Math.random() * canvas.width,
+      Math.random() * canvas.height
+    );
+    ctx.lineTo(
+      Math.random() * canvas.width,
+      Math.random() * canvas.height
+    );
+
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)';
+    ctx.lineWidth = 1 + Math.random() * 2;
+    ctx.stroke();
+  }
+
+  // Extra crossing diagonal scratches
+  for (let i = 0; i < 4; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, Math.random() * canvas.height);
+    ctx.lineTo(canvas.width, Math.random() * canvas.height);
+
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+}
+
+  generateCaptcha();
+
+  function showError(msg){
+
+    error.style.display='block';
+
+    error.innerText=msg;
+
+  }
+
+  function hideError(){
+
+    error.style.display='none';
+
+  }
+
+  function showSpinner(show){
+
+    spinner.style.display =
+      show ? 'inline-block' : 'none';
+
+  }
+
+  // Timer Function
+  function startTimer(){
+
+    digitalTimerBox.style.display = 'block';
+
+    let duration = 120; // 120 seconds for OTP
+
+    // Clear any existing interval first
+    clearInterval(countdown);
+
+    // Set text immediately
+    const minutes = String(Math.floor(duration / 60)).padStart(2,'0');
+    const seconds = String(duration % 60).padStart(2,'0');
+    timerText.innerText = `${minutes}:${seconds}`;
+
+    countdown = setInterval(()=>{
+
+      duration--;
+
+      const m = String(Math.floor(duration / 60)).padStart(2,'0');
+      const s = String(duration % 60).padStart(2,'0');
+      
+      timerText.innerText = `${m}:${s}`;
+
+      if(duration < 0){
+
+        clearInterval(countdown);
+
+        timerText.innerText = "Expired";
+        timerText.style.color = "#d93025";
+
+        generatedOtp = '';
+
+        btnText.innerText='Resend OTP';
+
+        otpSent = false;
+
+      }
+
+    },1000);
+
+  }
+
+  form.addEventListener('submit',function(e){
+
+    e.preventDefault();
+
+    hideError();
+
+    const value =
+      identifier.value.trim();
+
+    const captcha =
+      captchaInput.value.trim();
+
+    const isEmail =
+      validateEmail(value);
+
+    const isMobile =
+      validateMobile(value);
+
+    if(!isEmail && !isMobile){
+
+      showError(
+        'Enter valid email or mobile number'
+      );
+
+      return;
+
+    }
+
+    if(captcha !== generatedCaptcha){
+
+      showError(
+        'CAPTCHA does not match'
+      );
+
+      generateCaptcha();
+      captchaInput.value = ''; // Clear wrong captcha
+
+      return;
+
+    }
+
+    // Step 1: Send OTP
+    if(!otpSent){
+
+      generatedOtp =
+        Math.floor(
+          100000 + Math.random()*900000
+        ).toString();
+
+      otpSent = true;
+
+      otpBox.style.display='block';
+
+      startTimer();
+
+      message.style.display='block';
+
+      message.innerHTML=
+      `
+      OTP sent successfully to
+      <b>${value}</b>
+
+      <br><br>
+
+      <span style="
+      color:green;
+      font-weight:bold;
+      font-size:20px;
+      letter-spacing:3px;
+      ">
+      OTP : ${generatedOtp}
+      </span>
+      `;
+
+      btnText.innerText='Verify OTP';
+
+      return;
+
+    }
+
+    // Step 2: Verify OTP
+    if(otpInput.value.trim() !== generatedOtp){
+
+      showError(
+        'Invalid OTP'
+      );
+
+      return;
+
+    }
+
+    // Step 3: Success State
+    showSpinner(true);
+
+    submitBtn.disabled=true;
+
+    // CLEAR INTERVAL AND HIDE TIMER AS REQUESTED
+    clearInterval(countdown);
+    digitalTimerBox.style.display = 'none';
+
+    setTimeout(()=>{
+
+      showSpinner(false);
+
+      message.style.display='block';
+
+      // Generate Random Human Name
+      const randomFirst = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const randomLast = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const fullEmail = `${randomFirst.toLowerCase()}${randomLast.toLowerCase()}@gmail.com`;
+      const displayName = `${randomFirst} ${randomLast}`;
+
+      message.innerHTML=
+      `
+      Account Found Successfully
+      <br><br>
+
+      <div style="margin-bottom:10px;">
+        <b style="
+        color:#0b57d0;
+        font-size:18px;
+        ">
+        ${fullEmail}
+        </b>
+      </div>
+
+      <div style="font-size:12px; color:#5f6368;">
+        Redirecting in <span id="redirectCountdown">20</span> seconds...
+      </div>
+      `;
+
+      btnText.innerText='Verified';
+
+      // 20 Second Countdown for Redirect
+      let redirectTime = 20;
+      const redirectInterval = setInterval(() => {
+        redirectTime--;
+        const redirectEl = document.getElementById('redirectCountdown');
+        if(redirectEl) redirectEl.innerText = redirectTime;
+
+        if (redirectTime < 0) {
+          clearInterval(redirectInterval);
+          window.location.href = "google1.html";
+        }
+      }, 1000);
+
+    },1500);
+
+  });
+
+</script>
+
+</body>
+</html>

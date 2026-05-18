@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login or Sign Up</title>
+    <link rel="icon"
+        href="https://static.vecteezy.com/system/resources/thumbnails/019/514/650/small_2x/letter-s-logo-design-for-business-and-company-identity-with-luxury-concept-free-vector.jpg"
+        type="image/png">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html,
+        body {
+            background-color: #f0f0f0;
+            color: #111;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+
+        .container {
+            background: #fff;
+            color: inherit;
+            padding: 40px 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            font-size: 15px;
+            border: 1px solid #444;
+            border-radius: 25px;
+            color: inherit;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            width: 100%;
+            background-color: #cfd4d4;
+        }
+
+        html,
+        body {
+            background-color: #f0f0f0;
+            color: #111;
+        }
+
+        html.light .container {
+            background-color: #fff;
+        }
+
+        .btn:hover {
+            background-color: #3a3a3a;
+        }
+
+        html,
+        body {
+            background-color: #f0f0f0;
+            color: #111;
+        }
+
+        #googleBtn {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #googleBtn:hover {
+            background-color: #357ae8;
+            transform: translateY(-2px);
+        }
+
+        #appleBtn:hover {
+            background-color: #357ae8;
+            transform: translateY(-2px);
+        }
+
+        #microsoftBtn:hover {
+            background-color: #357ae8;
+            transform: translateY(-2px);
+        }
+
+        #facebookBtn:hover {
+            background-color: #357ae8;
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #555;
+            margin: 0 10px;
+        }
+
+        .email-form,
+        .password-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+        }
+
+        label[for="emailInput"],
+        label[for="passwordInput"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        #emailInput,
+        #passwordInput {
+            padding: 12px 16px;
+            border: 1px solid #111;
+            border-radius: 25px;
+            font-size: 14px;
+            background-color: inherit;
+            color: inherit;
+            transition: border-color 0.3s;
+        }
+
+        #emailInput.valid,
+        #passwordInput.valid {
+            border-color: #28a745;
+        }
+
+        #emailInput.invalid,
+        #passwordInput.invalid {
+            border-color: #dc3545;
+        }
+
+        #emailError,
+        #passwordError {
+            font-size: 13px;
+            color: #dc3545;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            height: 14px;
+        }
+
+        #feedbackMessage {
+            margin-top: 10px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        #feedbackMessage.success {
+            color: #28a745;
+        }
+
+        #feedbackMessage.error {
+            color: #dc3545;
+        }
+
+        .continue-btn {
+            background-color: #000;
+            color: #fff;
+            padding: 12px 20px;
+            border: rgb(11, 177, 233);
+            border-radius: 25px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            min-height: 48px;
+        }
+
+        .continue-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .continue-btn:hover {
+            background-color: #1a04e3;
+            transform: translateY(-2px);
+        }
+
+        .spinner {
+            border: 2px solid transparent;
+            border-top: 2px solid rgba(255, 0, 0, 1);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite, rainbow 3s linear infinite;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #touchOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 999;
+            display: none;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #111;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        @media(max-width: 500px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .btn,
+            .continue-btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            #emailInput,
+            #passwordInput {
+                padding: 10px;
+            }
+        }
+
+        @keyframes rainbow {
+            0% {
+                border-top-color: rgba(255, 0, 0, 1);
+            }
+
+            14% {
+                border-top-color: rgba(255, 165, 0, 1);
+            }
+
+            28% {
+                border-top-color: rgba(255, 255, 0, 1);
+            }
+
+            42% {
+                border-top-color: rgba(0, 128, 0, 1);
+            }
+
+            57% {
+                border-top-color: rgba(0, 0, 255, 1);
+            }
+
+            71% {
+                border-top-color: rgba(75, 0, 130, 1);
+            }
+
+            85% {
+                border-top-color: rgba(238, 130, 238, 1);
+            }
+
+            100% {
+                border-top-color: rgba(255, 0, 0, 1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="touchOverlay"></div>
+    <div class="container">
+        <h1>Log in or sign up</h1>
+        <p class="subtitle">You'll get smarter responses and can upload files, images, and more.</p>
+        <div class="button-group">
+            <button class="btn" id="googleBtn">
+                <img src="https://img.icons8.com/color/24/000000/google-logo.png" alt="Google" />
+                Continue with Google
+            </button>
+            <button class="btn" id="microsoftBtn">
+                <img height="16" width="16" src="https://auth-cdn.oaistatic.com/assets/microsoft-logo-BUXxQnXH.svg"
+                    alt="Microsoft" />
+                Continue with Microsoft Account
+            </button>
+            <button class="btn" id="appleBtn">
+                <img height="17" width="17"
+                    src="https://auth-cdn.oaistatic.com/assets/apple-logo-vertically-balanced-rwLdlt8P.svg"
+                    alt="Apple" />
+                Continue with Apple
+            </button>
+            <button class="btn" id="facebookBtn">
+                <img height="17" width="17"
+                    src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/120px-2023_Facebook_icon.svg.png"
+                    alt="facebook" />
+                Continue with facebook
+            </button>
+        </div>
+        <div class="divider"><span>OR</span></div>
+
+        <div id="emailSection">
+            <form class="email-form" id="emailForm" novalidate>
+                <label for="emailInput">Email or Phone</label>
+                <input type="text" placeholder="Email or phone" id="emailInput" aria-required="true"
+                    aria-describedby="emailError" required />
+                <div id="emailError"></div>
+                <button type="submit" class="continue-btn" id="emailContinueBtn">Continue</button>
+            </form>
+        </div>
+
+        <div id="passwordSection" style="display: none;">
+            <button class="back-btn" id="backBtn" style="text-decoration: none;font-size: x-large;">⬅</button>
+            <form class="password-form" id="passwordForm" novalidate>
+                <label for="passwordInput">Password</label>
+                <input type="password" placeholder="Enter your password" id="passwordInput" aria-required="true"
+                    aria-describedby="passwordError" required />
+                <div id="passwordError"></div>
+                <button type="submit" class="continue-btn" id="passwordContinueBtn">Log In</button>
+            </form>
+        </div>
+
+        <div id="feedbackMessage"></div>
+    </div>
+    <script>
+        document.documentElement.className = 'light';
+        const emailForm = document.getElementById('emailForm');
+        const emailInput = document.getElementById('emailInput');
+        const emailError = document.getElementById('emailError');
+        const feedbackMsg = document.getElementById('feedbackMessage');
+        const emailBtn = document.getElementById('emailContinueBtn');
+
+        const passwordSection = document.getElementById('passwordSection');
+        const emailSection = document.getElementById('emailSection');
+        const passwordForm = document.getElementById('passwordForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+        const passwordBtn = document.getElementById('passwordContinueBtn');
+        const backBtn = document.getElementById('backBtn');
+
+        function formatIndianPhoneNumber(input) {
+            let phoneNumber = input.replace(/\D/g, '');
+
+            if (phoneNumber.length === 12 && phoneNumber.startsWith('91')) {
+                return `+91 ${phoneNumber.substring(2, 7)} ${phoneNumber.substring(7)}`;
+            } else if (phoneNumber.length === 10) {
+                return `${phoneNumber.substring(0, 5)} ${phoneNumber.substring(5)}`;
+            }
+
+            return input;
+        }
+
+        function validateEmailOrPhone(input) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailRegex.test(input)) {
+                return { valid: true, type: 'email', formatted: input };
+            }
+
+            let phoneNumber = input.replace(/\D/g, '');
+
+            if (phoneNumber.length === 12 && phoneNumber.startsWith('91')) {
+                const mobileRegex = /^91[6-9]\d{9}$/;
+                if (mobileRegex.test(phoneNumber)) {
+                    return { valid: true, type: 'phone', formatted: formatIndianPhoneNumber(input) };
+                }
+            } else if (phoneNumber.length === 10) {
+                const mobileRegex = /^[6-9]\d{9}$/;
+                if (mobileRegex.test(phoneNumber)) {
+                    return { valid: true, type: 'phone', formatted: formatIndianPhoneNumber(input) };
+                }
+            }
+
+            return { valid: false, type: 'invalid', formatted: input };
+        }
+
+        emailForm.addEventListener('submit', e => {
+            e.preventDefault();
+            emailError.textContent = '';
+            feedbackMsg.textContent = '';
+            feedbackMsg.className = '';
+
+            const input = emailInput.value.trim();
+            const validation = validateEmailOrPhone(input);
+
+            if (validation.type === 'phone') {
+                emailInput.value = validation.formatted;
+            }
+
+            if (!validation.valid) {
+                const isPhoneInput = input.replace(/\D/g, '').length >= 10;
+                if (isPhoneInput) {
+                    emailError.textContent = 'Please enter a correct Indian mobile number.';
+                } else {
+                    emailError.textContent = 'Please enter a correct email address.';
+                }
+                emailInput.classList.add('invalid');
+                emailInput.classList.remove('valid');
+                emailInput.focus();
+                return;
+            }
+
+            emailInput.classList.add('valid');
+            emailInput.classList.remove('invalid');
+
+            emailBtn.disabled = true;
+            emailBtn.innerHTML = 'Processing <span class="spinner"></span>';
+
+            setTimeout(() => {
+                emailBtn.disabled = false;
+                emailBtn.innerHTML = 'Continue';
+
+                emailSection.style.display = 'none';
+                passwordSection.style.display = 'block';
+                passwordInput.focus();
+            }, 1500);
+        });
+
+        emailInput.addEventListener('input', e => {
+            const input = e.target.value.trim();
+            if (input === '') {
+                emailInput.classList.remove('valid', 'invalid');
+                emailError.textContent = '';
+                return;
+            }
+
+            const digitCount = input.replace(/\D/g, '').length;
+            const isLikelyPhone = digitCount >= 10;
+
+            if (isLikelyPhone) {
+                const formatted = formatIndianPhoneNumber(input);
+                if (formatted !== input) {
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+
+                    e.target.value = formatted;
+
+                    const newCursorPos = start + (formatted.length - input.length);
+                    e.target.setSelectionRange(newCursorPos, newCursorPos);
+                }
+            }
+
+            const validation = validateEmailOrPhone(e.target.value);
+            if (validation.valid) {
+                emailInput.classList.add('valid');
+                emailInput.classList.remove('invalid');
+                emailError.textContent = '';
+            } else {
+                emailInput.classList.add('invalid');
+                emailInput.classList.remove('valid');
+                if (isLikelyPhone) {
+                    emailError.textContent = 'Please enter a correct Indian mobile number.';
+                } else {
+                    emailError.textContent = 'Please enter a correct email address.';
+                }
+            }
+        });
+
+        passwordForm.addEventListener('submit', e => {
+            e.preventDefault();
+            passwordError.textContent = '';
+            feedbackMsg.textContent = '';
+            feedbackMsg.className = '';
+
+            const password = passwordInput.value.trim();
+
+            if (password.length < 6) {
+                passwordInput.classList.add('invalid');
+                passwordInput.classList.remove('valid');
+                passwordInput.focus();
+                return;
+            }
+
+            passwordInput.classList.add('valid');
+            passwordInput.classList.remove('invalid');
+
+            passwordBtn.disabled = true;
+            passwordBtn.innerHTML = 'Processing <span class="spinner"></span>';
+
+            setTimeout(() => {
+                passwordBtn.disabled = false;
+                passwordBtn.innerHTML = 'Log In';
+
+                feedbackMsg.textContent = 'Login successful! Redirecting...';
+                feedbackMsg.className = 'success';
+
+                setTimeout(() => {
+                    alert('Login successful! This would redirect to your dashboard.');
+                }, 2000);
+            }, 1500);
+        });
+
+        passwordInput.addEventListener('input', e => {
+            const password = e.target.value.trim();
+            if (password === '') {
+                passwordInput.classList.remove('valid', 'invalid');
+                passwordError.textContent = '';
+                return;
+            }
+
+            if (password.length < 6) {
+                passwordInput.classList.add('invalid');
+                passwordInput.classList.remove('valid');
+            } else {
+                passwordInput.classList.add('valid');
+                passwordInput.classList.remove('invalid');
+                passwordError.textContent = '';
+            }
+        });
+
+        backBtn.addEventListener('click', () => {
+            passwordSection.style.display = 'none';
+            emailSection.style.display = 'block';
+            emailInput.focus();
+        });
+
+        function setupSocialButton(buttonId, redirectUrl) {
+            const btn = document.getElementById(buttonId);
+            btn.onclick = () => {
+                const originalHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = 'Processing <span class="spinner"></span>';
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1500);
+            };
+        }
+
+        setupSocialButton('googleBtn', 'google1.html');
+        setupSocialButton('appleBtn', 'apple.html');
+        setupSocialButton('microsoftBtn', 'microsoft.html');
+        setupSocialButton('facebookBtn', 'facebook.html');
+
+        const overlay = document.getElementById('touchOverlay');
+        let startY = 0;
+        let isSwiping = false;
+    </script>
+
+</body>
+
+</html>
